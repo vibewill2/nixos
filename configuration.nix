@@ -16,7 +16,13 @@
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  programs.steam.enable = true;
+  hardware.opengl.enable = true;
+  hardware.opengl.driSupport32Bit = true;  
+                                        
+  
 
+  
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -82,7 +88,19 @@
   nwg-look
   tor-browser
   nodejs
-  metasploit 
+  metasploit
+  vulkan-tools             # Para testar Vulkan (ex: vkcube)
+  vulkan-loader            # Loader Vulkan
+  wineWowPackages.stable    # Wine com suporte a 64-bit e 32-bit
+  winetricks
+  cava
+  cmatrix
+  htop
+  fastfetch
+  obs-studio
+  gimp
+  kdePackages.kdenlive 
+  
   ];
    
 
