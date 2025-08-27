@@ -1,0 +1,19 @@
+configuration {
+  font: "JetBrains Mono 12";
+  show-icons: true;
+  icon-theme: "Papirus";
+  display-drun: "  ";
+  drun-display-format: "{icon} {name}";
+}
+
+* {
+  background:     #2e3440;
+  background-alt: #3b4252;
+  foreground:     #eceff4;
+  selected:       #88c0d0;
+  active:         #a3be8c;
+  urgent:         #bf616a;
+  border-color:   #88c0d0;
+  border:         2;
+  border-radius:  10;
+}

@@ -1,0 +1,58 @@
+
+/* --- Barra principal --- */
+#waybar {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+/* --- Workspaces --- */
+#workspaces button {
+    padding: 0 10px;
+    margin: 0 4px;
+    border-radius: 50%;
+    transition: all 0.2s ease-in-out;
+    color: #d8dee9; /* inativo */
+    background: #4c566a;
+}
+
+#workspaces button:hover {
+    background: #5e81ac;
+    color: #eceff4;
+}
+
+#workspaces button.active {
+    background: #88c0d0; /* azul */
+    color: #2e3440;
+}
+
+#workspaces button.occupied {
+    background: #ebcb8b; /* amarelo */
+    color: #2e3440;
+}
+
+#workspaces button.urgent {
+    background: #bf616a; /* vermelho */
+    color: #ffffff;
+}
+
+/* --- Módulos arredondados --- */
+#hyprland-window,
+#clock,
+#pulseaudio,
+#custom-mic,
+#network,
+#cpu,
+#memory,
+#custom-waybar-restart,
+#custom-power,
+#custom-reboot,
+#custom-espaco {
+    padding: 0 10px;
+    margin: 0 4px;
+    border-radius: 50%; /* arredondado igual aos workspaces */
+    background: #4c566a; /* mesma cor do workspace inativo */
+    color: #d8dee9; /* mesma cor do workspace inativo */
+    transition: all 0.2s ease-in-out;
+}
