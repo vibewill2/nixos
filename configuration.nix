@@ -22,6 +22,16 @@
                                         
   
 
+
+  # Habilita o servidor X (Ly precisa do TTY, não importa se Wayland depois)
+  services.xserver.enable = false;  
+
+  # Habilita Ly
+  services.displayManager.ly.enable = true;
+
+  
+  
+
   
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -100,7 +110,7 @@
   obs-studio
   gimp
   kdePackages.kdenlive 
-  
+  ly  
   ];
    
 
