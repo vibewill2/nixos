@@ -110,7 +110,18 @@
   obs-studio
   gimp
   kdePackages.kdenlive 
-  ly  
+  ly
+  ruby
+  python3
+  python3Packages.pip
+  python3Packages.pelican
+  python3Packages.markdown
+  python3Packages.ghp-import
+  go
+  lua
+  zola
+  hugo
+  gnome-boxes  
   ];
    
 
