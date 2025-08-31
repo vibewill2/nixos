@@ -22,6 +22,8 @@
                                         
   
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
 
   # Habilita o servidor X (Ly precisa do TTY, não importa se Wayland depois)
   services.xserver.enable = false;  
@@ -30,7 +32,7 @@
   services.displayManager.ly.enable = true;
   services.gvfs.enable = true;
   services.udisks2.enable = true;
-  
+    
   
 
   
@@ -122,7 +124,9 @@
   lua
   zola
   hugo
-  gnome-boxes  
+  gnome-boxes
+  superfile
+  heroic  
   ];
    
 
