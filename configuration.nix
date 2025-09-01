@@ -18,24 +18,30 @@
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   programs.steam.enable = true;
   hardware.opengl.enable = true;
-  hardware.opengl.driSupport32Bit = true;  
-                                        
-  
+  hardware.opengl.driSupport32Bit = true;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-
   # Habilita o servidor X (Ly precisa do TTY, não importa se Wayland depois)
-  services.xserver.enable = false;  
+  services.xserver.enable = false;
 
   # Habilita Ly
   services.displayManager.ly.enable = true;
   services.gvfs.enable = true;
   services.udisks2.enable = true;
-    
-  
 
-  
+  # Habilita o Fish Shell no sistema
+  programs.fish.enable = true;
+
+  # Define o Fish como shell padrão para o usuário "vibewill"
+  users.users.vibewill = {
+    isNormalUser = true;
+    shell = pkgs.fish;
+    extraGroups = [ "networkmanager" "wheel" ];
+    description = "vibewill";
+    packages = with pkgs; [];
+  };
+
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -70,65 +76,55 @@
   # Configure console keymap
   console.keyMap = "br-abnt2";
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.vibewill = {
-    isNormalUser = true;
-    description = "vibewill";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [];
-  };
-
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-  
-  
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
-  waybar
-  alacritty
-  rofi-wayland
-  swww
-  google-chrome
-  git
-  vim
-  vscode
-  xdg-user-dirs
-  waypaper
-  nwg-look
-  tor-browser
-  nodejs
-  metasploit
-  vulkan-tools             # Para testar Vulkan (ex: vkcube)
-  vulkan-loader            # Loader Vulkan
-  wineWowPackages.stable    # Wine com suporte a 64-bit e 32-bit
-  winetricks
-  cava
-  cmatrix
-  htop
-  fastfetch
-  obs-studio
-  gimp
-  kdePackages.kdenlive 
-  ly
-  ruby
-  python3
-  python3Packages.pip
-  python3Packages.pelican
-  python3Packages.markdown
-  python3Packages.ghp-import
-  go
-  lua
-  zola
-  hugo
-  gnome-boxes
-  superfile
-  heroic  
+    # vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    # wget
+    waybar
+    alacritty
+    rofi-wayland
+    swww
+    google-chrome
+    git
+    vim
+    vscode
+    xdg-user-dirs
+    waypaper
+    nwg-look
+    tor-browser
+    nodejs
+    metasploit
+    vulkan-tools # Para testar Vulkan (ex: vkcube)
+    vulkan-loader # Loader Vulkan
+    wineWowPackages.stable # Wine com suporte a 64-bit e 32-bit
+    winetricks
+    cava
+    cmatrix
+    htop
+    fastfetch
+    obs-studio
+    gimp
+    kdePackages.kdenlive
+    ly
+    ruby
+    python3
+    python3Packages.pip
+    python3Packages.pelican
+    python3Packages.markdown
+    python3Packages.ghp-import
+    go
+    lua
+    zola
+    hugo
+    gnome-boxes
+    superfile
+    heroic
+    warp-terminal
   ];
-   
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
