@@ -29,7 +29,10 @@
   services.displayManager.ly.enable = true;
   services.gvfs.enable = true;
   services.udisks2.enable = true;
+  services.flatpak.enable = true;
+  xdg.portal.enable = true;
 
+  
   # Habilita o Fish Shell no sistema
   programs.fish.enable = true;
 
