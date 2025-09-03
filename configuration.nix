@@ -24,6 +24,8 @@
 
   # Habilita o servidor X (Ly precisa do TTY, não importa se Wayland depois)
   services.xserver.enable = false;
+  virtualisation.libvirtd.enable = true;
+  programs.virt-manager.enable = true;
 
   # Habilita Ly
   services.displayManager.ly.enable = true;
