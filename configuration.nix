@@ -19,13 +19,18 @@
   programs.steam.enable = true;
   hardware.opengl.enable = true;
   hardware.opengl.driSupport32Bit = true;
-
+  virtualisation.lxd.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Habilita o servidor X (Ly precisa do TTY, não importa se Wayland depois)
   services.xserver.enable = false;
   virtualisation.libvirtd.enable = true;
   programs.virt-manager.enable = true;
+  
+  security.polkit.enable = true;
+
+ 
+ 
 
   # Habilita Ly
   services.displayManager.ly.enable = true;
@@ -130,6 +135,7 @@
     heroic
     warp-terminal
     fuzzel
+    polkit_gnome  
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
