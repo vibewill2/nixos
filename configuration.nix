@@ -96,7 +96,6 @@
     # wget
     waybar
     kitty
-    rofi-wayland
     swww
     google-chrome
     git
