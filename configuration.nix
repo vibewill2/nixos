@@ -1,7 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
 {
@@ -14,55 +10,40 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.hostName = "nixos";
   programs.steam.enable = true;
   hardware.opengl.enable = true;
   hardware.opengl.driSupport32Bit = true;
   virtualisation.lxd.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # Habilita o servidor X (Ly precisa do TTY, não importa se Wayland depois)
   services.xserver.enable = false;
   virtualisation.libvirtd.enable = true;
   programs.virt-manager.enable = true;
-  
   security.polkit.enable = true;
+  virtualisation.docker.enable = true;
 
- 
- 
-
-  # Habilita Ly
   services.displayManager.ly.enable = true;
   services.gvfs.enable = true;
   services.udisks2.enable = true;
   services.flatpak.enable = true;
   xdg.portal.enable = true;
 
-  
-  # Habilita o Fish Shell no sistema
-  programs.fish.enable = true;
+  #####programs.fish.enable = true;
 
-  # Define o Fish como shell padrão para o usuário "vibewill"
-  users.users.vibewill = {
-    isNormalUser = true;
-    shell = pkgs.fish;
-    extraGroups = [ "networkmanager" "wheel" ];
-    description = "vibewill";
-    packages = with pkgs; [];
-  };
+ # users.users.vibewill = {
+ #   isNormalUser = true;
+  #  shell = pkgs.fish;
+ #   extraGroups = [ "networkmanager" "wheel" ];
+ #   description = "vibewill";
+ #   packages = with pkgs; [];
+ # };
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
   programs.hyprland.enable = true;
-  # Enable networking
   networking.networkmanager.enable = true;
 
-  # Set your time zone.
   time.timeZone = "America/Sao_Paulo";
 
-  # Select internationalisation properties.
   i18n.defaultLocale = "pt_BR.UTF-8";
 
   i18n.extraLocaleSettings = {
@@ -77,23 +58,16 @@
     LC_TIME = "pt_BR.UTF-8";
   };
 
-  # Configure keymap in X11
   services.xserver.xkb = {
     layout = "br";
     variant = "";
   };
 
-  # Configure console keymap
   console.keyMap = "br-abnt2";
 
-  # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
-    # vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    # wget
     waybar
     kitty
     swww
@@ -107,9 +81,9 @@
     tor-browser
     nodejs
     metasploit
-    vulkan-tools # Para testar Vulkan (ex: vkcube)
-    vulkan-loader # Loader Vulkan
-    wineWowPackages.stable # Wine com suporte a 64-bit e 32-bit
+    vulkan-tools
+    vulkan-loader
+    wineWowPackages.stable
     winetricks
     cava
     cmatrix
@@ -120,11 +94,10 @@
     kdePackages.kdenlive
     ly
     ruby
-    python3
-    python3Packages.pip
-    python3Packages.pelican
-    python3Packages.markdown
-    python3Packages.ghp-import
+
+    # ✅ Python completo com tkinter e Pillow funcionando
+    (python3.withPackages (ps: with ps; [ tkinter pillow pip pelican markdown ghp-import ]))
+
     go
     lua
     zola
@@ -134,34 +107,8 @@
     heroic
     warp-terminal
     fuzzel
-    polkit_gnome  
+    polkit_gnome
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.05"; # Did you read the comment?
-
+  system.stateVersion = "25.05";
 }
