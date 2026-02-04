@@ -1,19 +1,11 @@
+/* Config principal do Rofi */
+
 configuration {
-  font: "JetBrains Mono 12";
+  modi: "drun,run,window";
+  matching: "fuzzy";
   show-icons: true;
-  icon-theme: "Papirus";
-  display-drun: "  ";
-  drun-display-format: "{icon} {name}";
+  sort: true;
+  drun-display-format: "{name}";
 }
 
-* {
-  background:     #1e1e2e;
-  background-alt: #313244;
-  foreground:     #cdd6f4;
-  selected:       #89b4fa;
-  active:         #fab387;
-  urgent:         #f38ba8;
-  border-color:   #89b4fa;
-  border:         2;
-  border-radius:  6;
-}
+@theme "~/.config/rofi/themes/modern-glass.rasi"
