@@ -20,7 +20,7 @@
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
+  security.polkit.enable = true;
   # Enable networking
   networking.networkmanager.enable = true;
 
@@ -28,18 +28,26 @@
     enable = true;
     dockerCompat = true; # permite usar comandos docker se quiser
   };
-
-     
-
+  
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # opcional
+    dedicatedServer.openFirewall = true; # opcional
+  };
+   hardware.graphics = {
+  enable = true;
+  enable32Bit = true;
+};     
+   
   # Set your time zone.
   time.timeZone = "America/Sao_Paulo";
-  programs.sway.enable = true;
+  programs.hyprland.enable = true;
   # Select internationalisation properties.
   i18n.defaultLocale = "pt_BR.UTF-8";
   
   virtualisation.libvirtd.enable = true;
   programs.fish.enable = true;
-  
+  services.displayManager.ly.enable = true;   
 
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "pt_BR.UTF-8";
@@ -79,6 +87,7 @@
   environment.systemPackages = with pkgs; [
   vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   wget
+  waybar
   i3blocks
   google-chrome
   rofi
@@ -86,8 +95,14 @@
   ncmpcpp
   mpd
   gnome-boxes
-  wineWowPackages.stable
+  wineWowPackages.staging
   winetricks
+  ly
+  foot
+  python3
+  python3Packages.pillow
+  tk
+  lxqt.lxqt-policykit
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
