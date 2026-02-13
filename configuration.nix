@@ -103,6 +103,7 @@
   python3Packages.pillow
   tk
   lxqt.lxqt-policykit
+  appimage-run
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
