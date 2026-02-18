@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+ICON_WIFI=""
+ICON_LAN=""
+ICON_OFF=""
+ICON_UP=""
+ICON_DOWN=""
+
+# pega primeira interface ativa (exceto lo)
+iface=$(ip -o link show up 2>/dev/null | awk -F': ' '{print $2}' | grep -Ev '^lo$' | head -1)
+
+if [ -z "$iface" ]; then
+  echo "$ICON_OFF offline"
+  exit 0
+fi
+
+if echo "$iface" | grep -qE 'wl|wifi'; then
+  icon="$ICON_WIFI"
+else
+  icon="$ICON_LAN"
+fi
+
+rx1=$(cat /sys/class/net/$iface/statistics/rx_bytes)
+tx1=$(cat /sys/class/net/$iface/statistics/tx_bytes)
+sleep 1
+rx2=$(cat /sys/class/net/$iface/statistics/rx_bytes)
+tx2=$(cat /sys/class/net/$iface/statistics/tx_bytes)
+
+rx_kb=$(( (rx2 - rx1) / 1024 ))
+tx_kb=$(( (tx2 - tx1) / 1024 ))
+
+# Ícone principal azul, setas e texto padrão
+echo "<span foreground='#61afef'>$icon</span> $ICON_DOWN ${rx_kb}K $ICON_UP ${tx_kb}K"

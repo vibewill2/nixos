@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+ICON=""
+
+read -r _ total used _ < <(free -m | awk 'NR==2{print $1, $2, $3, $4}')
+
+# Ícone verde, texto padrão
+echo "<span foreground='#98c379'>$ICON</span> ${used}M/${total}M"

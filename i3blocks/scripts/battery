@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+BAT_PATH=/sys/class/power_supply/BAT0
+
+ICON_FULL=""
+ICON_HIGH=""
+ICON_MED=""
+ICON_LOW=""
+ICON_EMPTY=""
+ICON_CHARGE=""
+
+if [ ! -d "$BAT_PATH" ]; then
+  echo "AC"
+  exit 0
+fi
+
+capacity=$(cat "$BAT_PATH/capacity")
+status=$(cat "$BAT_PATH/status")
+
+if [ "$status" = "Charging" ]; then
+  icon=$ICON_CHARGE
+else
+  if [ "$capacity" -ge 90 ]; then
+    icon=$ICON_FULL
+  elif [ "$capacity" -ge 70 ]; then
+    icon=$ICON_HIGH
+  elif [ "$capacity" -ge 40 ]; then
+    icon=$ICON_MED
+  elif [ "$capacity" -ge 15 ]; then
+    icon=$ICON_LOW
+  else
+    icon=$ICON_EMPTY
+  fi
+fi
+
+# Ícone rosa, texto padrão
+echo "<span foreground='#e06c75'>$icon</span> ${capacity}%"

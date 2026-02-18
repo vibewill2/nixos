@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+ICON_MUTE=""
+ICON_LOW=""
+ICON_MED=""
+ICON_HIGH=""
+
+# Usa amixer (ALSA); funciona mesmo sem PulseAudio/pipewire
+if ! command -v amixer >/dev/null 2>&1; then
+  echo " N/A"
+  exit 0
+fi
+
+# Ações com o mouse/clique na barra i3blocks
+# BLOCK_BUTTON=1 -> clique esquerdo (toggle mute)
+# BLOCK_BUTTON=4 -> scroll up (volume +5%)
+# BLOCK_BUTTON=5 -> scroll down (volume -5%)
+case "$BLOCK_BUTTON" in
+  1)
+    amixer -q set Master toggle ;;
+  4)
+    amixer -q set Master 5%+ ;;
+  5)
+    amixer -q set Master 5%- ;;
+esac
+
+# Recalcula volume/mute após possível alteração
+vol=$(amixer get Master | grep -o '[0-9]*%' | head -1 | tr -d '%')
+muted=$(amixer get Master | grep '\[off\]' | head -1)
+
+if [ -n "$muted" ]; then
+  icon=$ICON_MUTE
+  text="muted"
+else
+  if [ -z "$vol" ]; then
+    vol=0
+  fi
+
+  if [ "$vol" -lt 30 ]; then
+    icon=$ICON_LOW
+  elif [ "$vol" -lt 70 ]; then
+    icon=$ICON_MED
+  else
+    icon=$ICON_HIGH
+  fi
+  text="${vol}%"
+fi
+
+# Ícone em azul, texto na cor padrão do bloco
+echo "<span foreground='#61afef'>$icon</span> $text"

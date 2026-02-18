@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Obtém o workspace ativo
+active_workspace=$(swaymsg -t get_workspaces | jq -r '.[] | select(.focused==true) | .num')
+
+# Obtém todos os workspaces existentes
+existing_workspaces=$(swaymsg -t get_workspaces | jq -r '.[].num')
+
+# Constrói a saída para 8 workspaces fixos
+output=""
+for i in {1..8}; do
+    if [ "$i" = "$active_workspace" ]; then
+        # Workspace ativo
+        output+="<span background='#5294e2' foreground='#ffffff'> $i </span>"
+    elif echo "$existing_workspaces" | grep -q "^$i$"; then
+        # Workspace com janelas
+        output+="<span foreground='#ffffff'> $i </span>"
+    else
+        # Workspace vazio
+        output+="<span foreground='#555555'> $i </span>"
+    fi
+done
+
+echo -e "$output"
+
+# Clique para alternar workspace
+case $BLOCK_BUTTON in
+    1|2|3) # Qualquer botão - menu para escolher
+        workspace=$(echo -e "1\n2\n3\n4\n5\n6\n7\n8" | rofi -dmenu -p "Workspace:")
+        if [ -n "$workspace" ]; then
+            swaymsg workspace number "$workspace"
+        fi
+        ;;
+esac

@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+# Configuração e FIFO para cava no i3blocks
+CAVA_CONFIG="/tmp/cava_i3blocks.conf"
+CAVA_FIFO="/tmp/cava_i3blocks.fifo"
+
+# Cria FIFO se não existe
+[[ -p "$CAVA_FIFO" ]] || mkfifo "$CAVA_FIFO"
+
+# Cria configuração do cava
+cat > "$CAVA_CONFIG" << EOF
+[general]
+bars = 8
+framerate = 30
+
+[input]
+method = pulse
+source = auto
+
+[output]
+method = raw
+raw_target = $CAVA_FIFO
+data_format = ascii
+ascii_max_range = 7
+
+[smoothing]
+noise_reduction = 70
+EOF
+
+# Mata instâncias anteriores e inicia cava em background
+pkill -f "cava -p $CAVA_CONFIG" 2>/dev/null
+cava -p "$CAVA_CONFIG" &>/dev/null &
+
+# Blocos unicode para visualização
+bar_chars=(" " "▁" "▂" "▃" "▄" "▅" "▆" "▇")
+
+# Lê do FIFO e formata a saída
+while IFS= read -r -n8 line; do
+    output=""
+    for ((i=0; i<${#line}; i++)); do
+        char="${line:$i:1}"
+        val=$(printf '%d' "'$char" 2>/dev/null || echo 0)
+        idx=$((val % 8))
+        output+="${bar_chars[$idx]}"
+    done
+    printf '%s\n' "$output"
+done < "$CAVA_FIFO"
