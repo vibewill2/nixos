@@ -47,7 +47,7 @@
   
   virtualisation.libvirtd.enable = true;
   programs.fish.enable = true;
-  services.displayManager.ly.enable = true;   
+  # services.displayManager.ly.enable = true;   
 
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "pt_BR.UTF-8";
@@ -85,25 +85,13 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  wget
-  waybar
-  i3blocks
-  google-chrome
-  rofi
-  distrobox
-  ncmpcpp
-  mpd
-  gnome-boxes
-  wineWowPackages.staging
-  winetricks
-  ly
-  foot
-  python3
-  python3Packages.pillow
-  tk
-  lxqt.lxqt-policykit
-  appimage-run
+    kitty
+    rofi
+    
+    (python3.withPackages (ps: with ps; [
+      tkinter
+      pillow
+    ]))
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
