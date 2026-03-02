@@ -22,7 +22,7 @@ gaps inner 10
 gaps outer 10
 
 # Regras de Janelas (Opacidade Thunar 50%)
-for_window [app_id="thunar"] opacity 0.5
+for_window [app_id="nemo"] opacity 0.5
 
 # --- AUTOSTART ---
 exec --no-startup-id nm-applet
@@ -44,6 +44,7 @@ bindsym $mod+q kill
 bindsym $mod+d exec rofi -show drun
 bindsym $mod+b exec ~/.config/hypr/scripts/wallpaper_random.sh
 bindsym $mod+p exec python3 ~/.config/waypaper/mini_swww_selector.py
+
 # --- NAVEGAÇÃO ---
 bindsym $mod+j focus left
 bindsym $mod+k focus down
@@ -73,6 +74,18 @@ bindsym $mod+8 workspace $ws8
 bindsym $mod+9 workspace $ws9
 bindsym $mod+0 workspace $ws10
 
+# --- MOVER JANELA PARA WORKSPACE ---
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
 # --- SISTEMA ---
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+e exec "swaymsg exit"
@@ -80,7 +93,6 @@ bindsym $mod+Shift+e exec "swaymsg exit"
 # --- BARRA ---
 bar {
     position top
-    # Certifique-se que o caminho abaixo é o correto para o seu script
     status_command sh $HOME/.config/sway/status.sh
 
     colors {
