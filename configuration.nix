@@ -23,7 +23,7 @@
   security.polkit.enable = true;
   # Enable networking
   networking.networkmanager.enable = true;
-
+  services.udisks2.enable = true;
   virtualisation.podman = {
     enable = true;
     dockerCompat = true; # permite usar comandos docker se quiser
@@ -87,12 +87,25 @@
   environment.systemPackages = with pkgs; [
     kitty
     rofi
-    
+    distrobox
+    ncmpcpp
+    lxqt.lxqt-policykit
+    mpd
+    appimage-run
+    gnome-boxes
+    polkit_gnome    
     (python3.withPackages (ps: with ps; [
       tkinter
       pillow
     ]))
   ];
+
+
+
+   # inicia o agente polkit quando a sessão gráfica começa
+   services.xserver.displayManager.sessionCommands = ''
+  ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1 &
+  '';
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
