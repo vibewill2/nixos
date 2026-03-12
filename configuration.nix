@@ -47,7 +47,7 @@
   
   virtualisation.libvirtd.enable = true;
   programs.fish.enable = true;
-  # services.displayManager.ly.enable = true;   
+  services.displayManager.ly.enable = true;   
 
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "pt_BR.UTF-8";
