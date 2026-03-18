@@ -1,53 +1,50 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
       ./hardware-configuration.nix
     ];
 
-  # Bootloader.
+  # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.hostName = "nixos";
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-  security.polkit.enable = true;
-  # Enable networking
-  networking.networkmanager.enable = true;
+  # 🔑 ESSENCIAL para pendrive
   services.udisks2.enable = true;
+  services.gvfs.enable = true;
+  security.polkit.enable = true;
+
+  networking.networkmanager.enable = true;
+
+  # Virtualização
   virtualisation.podman = {
     enable = true;
-    dockerCompat = true; # permite usar comandos docker se quiser
+    dockerCompat = true;
   };
-  
+
+  virtualisation.libvirtd.enable = true;
+
+  # Steam
   programs.steam = {
     enable = true;
-    remotePlay.openFirewall = true; # opcional
-    dedicatedServer.openFirewall = true; # opcional
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
   };
-   hardware.graphics = {
-  enable = true;
-  enable32Bit = true;
-};     
-   
-  # Set your time zone.
+
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
   time.timeZone = "America/Sao_Paulo";
+
   programs.hyprland.enable = true;
-  # Select internationalisation properties.
-  i18n.defaultLocale = "pt_BR.UTF-8";
-  
-  virtualisation.libvirtd.enable = true;
   programs.fish.enable = true;
-  services.displayManager.ly.enable = true;   
+
+  i18n.defaultLocale = "pt_BR.UTF-8";
 
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "pt_BR.UTF-8";
@@ -61,29 +58,22 @@
     LC_TIME = "pt_BR.UTF-8";
   };
 
-  # Configure keymap in X11
   services.xserver.xkb = {
     layout = "br";
     variant = "";
   };
 
-  # Configure console keymap
   console.keyMap = "br-abnt2";
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.vibewill = {
     isNormalUser = true;
     description = "vibewill";
-    extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" ];
-    packages = with pkgs; [];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" "storage" ];
     shell = pkgs.fish;
   };
 
-  # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
     kitty
     rofi
@@ -93,45 +83,21 @@
     mpd
     appimage-run
     gnome-boxes
-    polkit_gnome    
+    polkit_gnome
+
+    # 🔥 ESSENCIAL PRA AUTOMOUNT
+    udiskie
+
     (python3.withPackages (ps: with ps; [
       tkinter
       pillow
     ]))
   ];
 
-
-
-   # inicia o agente polkit quando a sessão gráfica começa
-   services.xserver.displayManager.sessionCommands = ''
-  ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1 &
+  # agente polkit
+  services.xserver.displayManager.sessionCommands = ''
+    ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1 &
   '';
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.11"; # Did you read the comment?
-
+  system.stateVersion = "25.11";
 }
