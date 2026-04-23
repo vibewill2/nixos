@@ -41,8 +41,13 @@
 
   time.timeZone = "America/Sao_Paulo";
 
-  programs.hyprland.enable = true;
+  programs.niri.enable = true;
   programs.fish.enable = true;
+  services.xserver.enable = true;
+  # Driver de vídeo básico (funciona na maioria dos casos)
+  services.xserver.videoDrivers = [ "modesetting" ];
+  # Gerenciador de login
+  services.xserver.displayManager.lightdm.enable = true;
 
   i18n.defaultLocale = "pt_BR.UTF-8";
 
@@ -75,8 +80,10 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
-    kitty
-    rofi
+    alacritty
+    fuzzel
+    google-chrome
+    firefox
     distrobox
     ncmpcpp
     lxqt.lxqt-policykit
