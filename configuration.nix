@@ -19,13 +19,24 @@
 
   networking.networkmanager.enable = true;
 
-  # Virtualização
+  # ✅ Virtualização (FIXADO)
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu = {
+      package = pkgs.qemu_kvm;
+      runAsRoot = false;
+      swtpm.enable = true;
+    };
+  };
+
+  # 🔥 módulos KVM
+  boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
+
+  # Podman
   virtualisation.podman = {
     enable = true;
     dockerCompat = true;
   };
-
-  virtualisation.libvirtd.enable = true;
 
   # Steam
   programs.steam = {
@@ -44,10 +55,9 @@
   programs.niri.enable = true;
   
   programs.fish.enable = true;
+
   services.xserver.enable = true;
-  # Driver de vídeo básico (funciona na maioria dos casos)
   services.xserver.videoDrivers = [ "modesetting" ];
-  # Gerenciador de login
   services.xserver.displayManager.lightdm.enable = true;
 
   i18n.defaultLocale = "pt_BR.UTF-8";
@@ -66,7 +76,6 @@
 
   services.xserver.xkb = {
     layout = "br";
-    variant = "";
   };
 
   console.keyMap = "br-abnt2";
@@ -74,13 +83,18 @@
   users.users.vibewill = {
     isNormalUser = true;
     description = "vibewill";
-    extraGroups = [ "networkmanager" "wheel" "libvirtd" "kvm" "storage" ];
+    extraGroups = [ 
+      "networkmanager" 
+      "wheel" 
+      "libvirtd" 
+      "kvm" 
+      "storage" 
+    ];
     shell = pkgs.fish;
   };
 
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
 
   environment.systemPackages = with pkgs; [
     alacritty
@@ -93,12 +107,15 @@
     mpd
     appimage-run
     gnome-boxes
+    virt-manager
+    qemu_kvm
+    spice
+    spice-gtk
+
     polkit_gnome
     xdg-desktop-portal-wlr
     grim
-    
 
-    # 🔥 ESSENCIAL PRA AUTOMOUNT
     udiskie
 
     (python3.withPackages (ps: with ps; [
@@ -109,13 +126,13 @@
 
   # agente polkit
   systemd.user.services.polkit-gnome = {
-  description = "Polkit GNOME Authentication Agent";
-  wantedBy = [ "graphical-session.target" ];
-  serviceConfig = {
-    ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-    Restart = "on-failure";
+    description = "Polkit GNOME Authentication Agent";
+    wantedBy = [ "graphical-session.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+      Restart = "on-failure";
+    };
   };
-};
 
   system.stateVersion = "25.11";
 }
