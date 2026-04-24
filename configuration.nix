@@ -42,6 +42,7 @@
   time.timeZone = "America/Sao_Paulo";
 
   programs.niri.enable = true;
+  
   programs.fish.enable = true;
   services.xserver.enable = true;
   # Driver de vídeo básico (funciona na maioria dos casos)
@@ -78,6 +79,8 @@
   };
 
   nixpkgs.config.allowUnfree = true;
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
 
   environment.systemPackages = with pkgs; [
     alacritty
@@ -91,6 +94,9 @@
     appimage-run
     gnome-boxes
     polkit_gnome
+    xdg-desktop-portal-wlr
+    grim
+    
 
     # 🔥 ESSENCIAL PRA AUTOMOUNT
     udiskie
@@ -102,9 +108,14 @@
   ];
 
   # agente polkit
-  services.xserver.displayManager.sessionCommands = ''
-    ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1 &
-  '';
+  systemd.user.services.polkit-gnome = {
+  description = "Polkit GNOME Authentication Agent";
+  wantedBy = [ "graphical-session.target" ];
+  serviceConfig = {
+    ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+    Restart = "on-failure";
+  };
+};
 
   system.stateVersion = "25.11";
 }
