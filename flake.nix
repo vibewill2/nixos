@@ -1,5 +1,5 @@
 {
-  description = "NixOS minimal + Noctalia";
+  description = "NixOS + Noctalia";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -10,15 +10,25 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, noctalia, ... }: {
-    nixosConfigurations.awesomebox = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-
-      specialArgs = { inherit inputs; };
+  outputs = { self, nixpkgs, noctalia, ... }:
+  let
+    system = "x86_64-linux";
+  in {
+    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+      inherit system;
 
       modules = [
         ./configuration.nix
-        ./noctalia.nix
+
+        # módulo do Noctalia
+        noctalia.nixosModules.default
+
+        # instala o pacote no sistema
+        ({ pkgs, ... }: {
+          environment.systemPackages = [
+            noctalia.packages.${system}.default
+          ];
+        })
       ];
     };
   };
