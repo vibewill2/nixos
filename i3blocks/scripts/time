@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-CLOCK_COLOR="#61afef"   # azul para o ícone de hora
-DATE_COLOR="#e5c07b"    # amarelo para o ícone de data
-
-now_time=$(date +'%H:%M')
-now_date=$(date +'%d/%m/%Y')
-
-echo "<span foreground='${CLOCK_COLOR}'></span> ${now_time}  <span foreground='${DATE_COLOR}'></span> ${now_date}"

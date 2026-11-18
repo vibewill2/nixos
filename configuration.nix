@@ -1,65 +1,47 @@
-{ config, pkgs, ... }:
+# Edit this configuration file to define what should be installed on
+# your system. Help is available in the configuration.nix(5) man page, on
+# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
+
+{ config, pkgs, inputs, ... }:
 
 {
   imports =
-    [
+    [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      inputs.umbriel.nixosModules.default
+      inputs.noctalia.nixosModules.default
     ];
 
-  # Bootloader
+  # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos";
+  # Use latest kernel.
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  # 🔑 ESSENCIAL para pendrive
-  services.udisks2.enable = true;
-  services.gvfs.enable = true;
-  security.polkit.enable = true;
-
-  networking.networkmanager.enable = true;
-
-  # ✅ Virtualização (FIXADO)
-  virtualisation.libvirtd = {
-    enable = true;
-    qemu = {
-      package = pkgs.qemu_kvm;
-      runAsRoot = false;
-      swtpm.enable = true;
-    };
+  # Ativa Flakes e cache binário do Noctalia para evitar compilação lenta
+  nix.settings = {
+    experimental-features = [ "nix-command" "flakes" ];
+    substituters = [ "https://noctalia.cachix.org" ];
+    trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
   };
 
-  # 🔥 módulos KVM
-  boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
+  networking.hostName = "nixos"; # Define your hostname.
 
-  # Podman
-  virtualisation.podman = {
-    enable = true;
-    dockerCompat = true;
-  };
+  # Enable networking
+  networking.networkmanager.enable = true; 
+  
+  # Ativa a virtualização necessária para o Boxes funcionar
+  virtualisation.libvirtd.enable = true;
 
-  # Steam
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-  };
+  # Dá permissão ao seu usuário para criar e rodar máquinas virtuais
+  users.groups.libvirtd.members = [ "vibewill" ];
+  users.groups.kvm.members = [ "vibewill" ];
 
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-  };
-
+  # Set your time zone.
   time.timeZone = "America/Sao_Paulo";
 
-  programs.niri.enable = true;
-  
-  programs.fish.enable = true;
-
-  services.xserver.enable = true;
-  services.xserver.videoDrivers = [ "modesetting" ];
-  services.xserver.displayManager.lightdm.enable = true;
-
+  # Select internationalisation properties.
   i18n.defaultLocale = "pt_BR.UTF-8";
 
   i18n.extraLocaleSettings = {
@@ -74,65 +56,64 @@
     LC_TIME = "pt_BR.UTF-8";
   };
 
+  # Enable the X11 windowing system.
+  services.xserver.enable = true;
+
+  # Display Manager e sessão padrão configurados para o Umbriel
+  services.xserver.displayManager.lightdm.enable = true;
+  services.displayManager.defaultSession = "umbriel";
+  # services.desktopManager.pantheon.enable = true;
+
+  # Enable Umbriel and Noctalia Shell
+  programs.umbriel.enable = true;
+  programs.noctalia = {
+    enable = true;
+    recommendedServices.enable = true;
+  };
+
+  # Configure keymap in X11
   services.xserver.xkb = {
     layout = "br";
+    variant = "";
   };
 
+  # Configure console keymap
   console.keyMap = "br-abnt2";
 
-  users.users.vibewill = {
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
+
+  # Enable sound with pipewire.
+  services.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users."vibewill" = {
     isNormalUser = true;
     description = "vibewill";
-    extraGroups = [ 
-      "networkmanager" 
-      "wheel" 
-      "libvirtd" 
-      "kvm" 
-      "storage" 
+    extraGroups = [ "networkmanager" "wheel" ];
+    packages = with pkgs; [
+    #  thunderbird
     ];
-    shell = pkgs.fish;
   };
 
+  # Install firefox.
+  programs.firefox.enable = true;
+
+  # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  # Pacotes instalados no sistema (incluindo Kitty para o Umbriel)
   environment.systemPackages = with pkgs; [
-    alacritty
-    fuzzel
-    google-chrome
-    firefox
-    distrobox
-    ncmpcpp
-    lxqt.lxqt-policykit
-    mpd
-    appimage-run
+    kitty
     gnome-boxes
-    virt-manager
-    qemu_kvm
-    spice
-    spice-gtk
-
-    polkit_gnome
-    xdg-desktop-portal-wlr
-    grim
-
-    udiskie
-
-    (python3.withPackages (ps: with ps; [
-      tkinter
-      pillow
-    ]))
   ];
 
-  # agente polkit
-  systemd.user.services.polkit-gnome = {
-    description = "Polkit GNOME Authentication Agent";
-    wantedBy = [ "graphical-session.target" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
-      Restart = "on-failure";
-    };
-  };
-
-  system.stateVersion = "25.11";
+  system.stateVersion = "26.05"; # Did you read the comment?
 }
