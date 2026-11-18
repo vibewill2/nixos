@@ -29,7 +29,14 @@
   networking.hostName = "nixos"; # Define your hostname.
 
   # Enable networking
-  networking.networkmanager.enable = true; 
+  networking.networkmanager.enable = true;
+
+   # Permite que o Nautilus detecte volumes, rede e lixeira
+  services.gvfs.enable = true;
+
+  # Gerencia a montagem de discos e pendrives sem precisar de senha root
+  services.udisks2.enable = true;
+  
   
   # Ativa a virtualização necessária para o Boxes funcionar
   virtualisation.libvirtd.enable = true;
